@@ -1,139 +1,174 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YS Incorporation - Your Trusted Bank</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>История телефона</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to bottom, #e0f7fa, #80deea);
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .intro, .outro {
+            background: #ffffff;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+        .intro h1, .outro h2 {
+            color: #00695c;
+        }
+        .block {
+            background: linear-gradient(135deg, #26a69a, #4db6ac);
+            color: #fff;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        .block:hover {
+            transform: translateY(-5px);
+        }
+        .block h2 {
+            font-size: 1.4em;
+            margin: 0;
+            flex-grow: 1;
+        }
+        .block p {
+            display: none;
+            margin-top: 10px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        .block.active p {
+            display: block;
+        }
+        .icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            fill: #fff;
+        }
+    </style>
 </head>
-<body class="bg-red-50 font-sans">
-    <!-- Header -->
-    <header class="bg-red-600 text-white py-6">
-        <div class="container mx-auto flex justify-between items-center px-6">
-            <h1 class="text-4xl font-extrabold">YS Incorporation</h1>
-            <nav>
-                <ul class="flex space-x-8 text-lg">
-                    <li><a href="#home" class="hover:text-orange-300">Home</a></li>
-                    <li><a href="#about" class="hover:text-orange-300">About</a></li>
-                    <li><a href="#services" class="hover:text-orange-300">Services</a></li>
-                    <li><a href="#contact" class="hover:text-orange-300">Contact</a></li>
-                </ul>
-            </nav>
+<body>
+    <div class="container">
+        <div class="intro">
+            <h1>Путешествие телефона через время</h1>
+            <p>От проводных аппаратов до умных устройств — узнайте, как телефон изменил нашу жизнь! Нажмите на блоки, чтобы раскрыть историю.</p>
+            <svg width="50" height="50" style="position: absolute; top: 10px; right: 10px;">
+                <circle cx="25" cy="25" r="20" fill="#26a69a"/>
+                <path d="M25 15v20m-10-10h20" stroke="#fff" stroke-width="3"/>
+            </svg>
         </div>
-    </header>
 
-    <!-- Hero Section with Shapes -->
-    <section id="home" class="bg-orange-500 text-white py-24 relative overflow-hidden">
-        <div class="container mx-auto text-center px-6 relative z-10">
-            <h2 class="text-5xl font-bold mb-6">Welcome to YS Incorporation</h2>
-            <p class="text-xl mb-8">Your trusted partner for financial success. Established in 2025 by Abitov Yerzhan, we offer tailored banking solutions.</p>
-            <a href="#services" class="bg-red-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-red-500">Discover Our Services</a>
-        </div>
-        <!-- Decorative Shapes -->
-        <svg class="absolute top-10 left-10 w-24 h-24 opacity-50" fill="none" stroke="red" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" stroke-width="2"/>
-        </svg>
-        <svg class="absolute bottom-20 right-20 w-32 h-32 opacity-50" fill="orange" viewBox="0 0 24 24">
-            <polygon points="12,2 22,22 2,22" />
-        </svg>
-    </section>
-
-    <!-- About Section with Shapes -->
-    <section id="about" class="py-20 relative">
-        <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center mb-10 text-red-700">About YS Incorporation</h2>
-            <p class="text-xl text-gray-800 max-w-4xl mx-auto mb-6">YS Incorporation is a modern bank founded in 2025 by Abitov Yerzhan. The name "YS" stands for "Yerzhan’s Success," reflecting our commitment to your financial achievements. Based in Almaty, Kazakhstan, we provide innovative banking solutions.</p>
-            <p class="text-xl text-gray-800 max-w-4xl mx-auto">With a team backed by decades of financial expertise, we empower individuals and businesses to reach their goals. From personal savings to business growth, YS Incorporation is your reliable partner.</p>
-        </div>
-        <!-- Decorative Shapes -->
-        <svg class="absolute top-20 right-10 w-20 h-20 opacity-50" fill="red" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" />
-        </svg>
-        <svg class="absolute bottom-10 left-20 w-28 h-28 opacity-50" fill="none" stroke="orange" viewBox="0 0 24 24">
-            <polygon points="12,2 22,22 2,22" stroke-width="2"/>
-        </svg>
-    </section>
-
-    <!-- Services Section -->
-    <section id="services" class="bg-gray-100 py-20">
-        <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center mb-10 text-red-700">Our Services</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div class="bg-white p-8 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-semibold mb-4 text-orange-500">Personal Banking</h3>
-                    <p class="text-gray-600 text-lg">Manage your finances with our savings accounts, personal loans, and credit cards designed for your needs.</p>
-                </div>
-                <div class="bg-white p-8 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-semibold mb-4 text-orange-500">Business Banking</h3>
-                    <p class="text-gray-600 text-lg">Support your business with tailored accounts, merchant services, and financing options for growth.</p>
-                </div>
-                <div class="bg-white p-8 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-semibold mb-4 text-orange-500">Investment Services</h3>
-                    <p class="text-gray-600 text-lg">Plan for the future with our wealth management, retirement planning, and investment advisory services.</p>
-                </div>
+        <div class="block" onclick="toggleContent(this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 11c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+            <div>
+                <h2>1876: Первый телефон</h2>
+                <p>Александр Грэм Белл изобрел телефон, передав голос через провода, что стало началом телекоммуникаций.</p>
             </div>
         </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="bg-red-100 py-20">
-        <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center mb-10 text-red-700">Contact Us</h2>
-            <div class="max-w-xl mx-auto">
-                <p class="text-xl text-gray-700 mb-6 text-center">We’re here to assist you with your banking needs.</p>
-                <p class="text-gray-600 text-lg mb-3"><strong>Email:</strong> vlad.ossipov11@gmail.com</p>
-                <p class="text-gray-600 text-lg mb-3"><strong>Phone:</strong> +7 771 487 6443</p>
-                <p class="text-gray-600 text-lg mb-8"><strong>Address:</strong> Zhamakaev 164, Almaty, Kazakhstan</p>
-                <a href="mailto:vlad.ossipov11@gmail.com" class="bg-orange-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-orange-400 block text-center">Send Us a Message</a>
+        <div class="block" onclick="toggleContent(this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M6 5h12v2H6zm0 4h12v2H6zm0 4h12v2H6zm0 4h12v2H6z"/></svg>
+            <div>
+                <h2>1891: Автоматические коммутаторы</h2>
+                <p>Появление АТС позволило соединять звонки без участия операторов, ускорив связь.</p>
             </div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="bg-red-600 text-white py-8">
-        <div class="container mx-auto text-center px-6">
-            <p class="text-lg">© 2025 YS Incorporation. All rights reserved.</p>
-            <p class="mt-3 text-lg"><a href="#privacy" class="hover:text-orange-300">Privacy Policy</a> | <a href="#terms" class="hover:text-orange-300">Terms of Service</a></p>
+        <div class="block" onclick="toggleContent(this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+            <div>
+                <h2>1927: Трансатлантический звонок</h2>
+                <p>Радиоволны связали США и Европу, сделав международные звонки реальностью.</p>
+            </div>
         </div>
-    </footer>
+
+        <div class="block" onclick="toggleContent(this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M7 4v16h10V4H7zm8 14H9V6h6v12z"/></svg>
+            <div>
+                <h2>1973: Мобильный телефон</h2>
+                <p>Мартин Купер из Motorola сделал первый звонок с портативного устройства.</p>
+            </div>
+        </div>
+
+        <div class="block" onclick="toggleContent(this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M20 2H4v20h16V2zm-2 18H6V4h12v16z"/></svg>
+            <div>
+                <h2>1983: Сеть 1G</h2>
+                <p>Запуск первой коммерческой мобильной сети в США сделал мобильники массовыми.</p>
+            </div>
+        </div>
+
+        <div class="block" onclick="toggleContent(this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+            <div>
+                <h2>1992: Первые SMS</h2>
+                <p>Отправка первого текстового сообщения через GSM положила начало текстовому общению.</p>
+            </div>
+        </div>
+
+        <div class="block" onclick="toggleContent(this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <div>
+                <h2>1999: Зарождение смартфонов</h2>
+                <p>BlackBerry и подобные устройства объединили телефон и функции КПК.</p>
+            </div>
+        </div>
+
+        <div class="block" onclick="toggleContent(this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 16c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"/></svg>
+            <div>
+                <h2>2007: Революция iPhone</h2>
+                <p>Apple iPhone объединил сенсорный экран, интернет и мультимедиа, изменив рынок.</p>
+            </div>
+        </div>
+
+        <div class="block" onclick="toggleContent(this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 12c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>
+            <div>
+                <h2>2008: Android</h2>
+                <p>Google запустила Android, создав открытую платформу и конкуренцию iOS.</p>
+            </div>
+        </div>
+
+        <div class="block" onclick="toggleContent(this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 7h2v6h-2zm0 8h2v2h-2z"/></svg>
+            <div>
+                <h2>2020-е: 5G и складные экраны</h2>
+                <p>Сети 5G и складные телефоны открывают новые горизонты для мобильных технологий.</p>
+            </div>
+        </div>
+
+        <div class="outro">
+            <h2>Куда приведет нас будущее?</h2>
+            <p>Телефоны продолжают эволюционировать, соединяя нас всё теснее. Какие технологии ждут нас завтра? Следите за новинками!</p>
+            <svg width="50" height="50" style="position: absolute; bottom: 10px; left: 10px;">
+                <rect width="40" height="40" x="5" y="5" rx="5" fill="#00695c"/>
+                <path d="M15 15h20v20H15z" stroke="#fff" stroke-width="2"/>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        function toggleContent(element) {
+            element.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
